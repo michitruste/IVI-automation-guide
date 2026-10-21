@@ -30,10 +30,6 @@ def start_all(sources: list[MediaSource]) -> list[str]:
     return [s.play() for s in sources]   # same call, different behavior
 
 
-print(start_all([BluetoothAudio("Pixel 8"), USBAudio()]))
-# ['Bluetooth: playing from Pixel 8', 'USB: playing']
-
-
 class Display(ABC):                      # an interface every screen must follow
     @abstractmethod
     def render(self, text: str) -> None: ...
@@ -44,4 +40,8 @@ class ClusterDisplay(Display):
         print(f"[cluster] {text}")
 
 
-# Display()   # TypeError: Can't instantiate abstract class Display ...
+if __name__ == "__main__":      # python -m ivi.media
+    print(start_all([BluetoothAudio("Pixel 8"), USBAudio()]))
+    # ['Bluetooth: playing from Pixel 8', 'USB: playing']
+    ClusterDisplay().render("Now playing")   # [cluster] Now playing
+    # Display()   # TypeError: Can't instantiate abstract class Display ...

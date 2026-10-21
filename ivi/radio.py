@@ -35,14 +35,9 @@ class RadioTuner:
         return f"RadioTuner(frequency={self._frequency})"
 
 
-tuner = RadioTuner()
-print(tuner.is_on)
-print(tuner.frequency)
-tuner.power_on()
-print(tuner.is_on)
-print(tuner.frequency)
-tuner.frequency = 101.1     # runs the setter, passes validation
-print(tuner.is_on)
-print(tuner.frequency)
-# tuner.frequency = 200       # ValueError: 200 MHz out of FM band
-# tuner.is_on = False         # AttributeError: property has no setter
+if __name__ == "__main__":      # python -m ivi.radio
+    tuner = RadioTuner()
+    tuner.power_on()
+    tuner.frequency = 101.1     # runs the setter, passes validation
+    print(tuner, tuner.is_on)   # RadioTuner(frequency=101.1) True
+    tuner.frequency = 200       # ValueError: 200 MHz out of FM band

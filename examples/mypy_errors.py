@@ -24,6 +24,6 @@ print(volum)
 
 
 def mute(level: int = None) -> None: ...
-# error: Incompatible default for argument "level" (default has type "None",
-#        argument has type "int")  [assignment]
+# error: Incompatible default for parameter "level" (default has type "None",
+#        parameter has type "int")  [assignment]
 # fix: level: int | None = None

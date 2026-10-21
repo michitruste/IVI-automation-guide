@@ -1,4 +1,4 @@
-class InvalidTransition(Exception):
+class InvalidTransitionError(Exception):
     pass
 
 
@@ -17,7 +17,7 @@ class MediaPlayer:
     def _go(self, action: str) -> None:
         key = (self.state, action)
         if key not in self.TRANSITIONS:
-            raise InvalidTransition(f"cannot {action} from {self.state}")
+            raise InvalidTransitionError(f"cannot {action} from {self.state}")
         self.state = self.TRANSITIONS[key]
 
     def play(self) -> None:

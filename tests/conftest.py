@@ -1,8 +1,8 @@
 import pytest
 
 from ivi.hvac import HvacController
-from ivi.radio import RadioTuner
 from ivi.player import MediaPlayer
+from ivi.radio import RadioTuner
 from tests.fakes import FakeCanBus
 
 
@@ -24,6 +24,7 @@ def can_bus():
 @pytest.fixture
 def hvac(can_bus):       # a fixture that uses another fixture
     return HvacController(can_bus)
+
 
 @pytest.fixture
 def player():

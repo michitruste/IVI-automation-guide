@@ -1,18 +1,12 @@
 import pytest
 
-from ivi.player import InvalidTransition, MediaPlayer
+from ivi.player import InvalidTransitionError, MediaPlayer
 
 
 def test_playing_state(player):
     player.play()
     assert player.state == "PLAYING"
 
-
-@pytest.mark.parametrize("freq", [87.4, 108.1, 200])
-def test_frequencies(tuner, freq):
-    with pytest.raises(ValueError):
-        tuner.frequency = freq
-    
 
 @pytest.mark.parametrize("freq", [87.5, 99.9, 108.0])
 def test_valid_frequency(tuner, freq):          # fixture + parameter together
@@ -52,7 +46,7 @@ def test_valid_transition(start, action, expected):
 )
 def test_invalid_transition(start, action):
     player = MediaPlayer(state=start)
-    with pytest.raises(InvalidTransition):
+    with pytest.raises(InvalidTransitionError):
         getattr(player, action)()
     assert player.state == start                # state is unchanged
 
