@@ -1,0 +1,1379 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>IVI Automation Prep</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Barlow+Semi+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: dark instrument-panel header band, sticky topic rail on the left, one reading column with code, pitfalls and self-check quizzes */
+:root {
+  --bg: #f1f4f6;
+  --surface: #ffffff;
+  --ink: #15212c;
+  --muted: #586775;
+  --line: #d6dde4;
+  --accent: #0b8580;
+  --accent-soft: #dff1ef;
+  --band: #15243d;
+  --band-ink: #e7eef6;
+  --band-muted: #9fb1c6;
+  --band-line: #2c3f5e;
+  --band-accent: #63d3ca;
+  --code-bg: #13203a;
+  --code-ink: #dde6f1;
+  --code-line: #24345a;
+  --c-kw: #7fd6cf;
+  --c-str: #f0c27d;
+  --c-com: #7d8ea8;
+  --c-num: #f0998a;
+  --c-dec: #b7a6f4;
+  --good: #23743f;
+  --good-soft: #e1f1e6;
+  --bad: #ad3326;
+  --bad-soft: #f8e3df;
+  --warn: #8a5f00;
+  --warn-soft: #faf0d7;
+  --f-display: "Barlow Semi Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c131b; --surface: #131d28; --ink: #e2e9ef; --muted: #93a3b3; --line: #243242;
+    --accent: #45c6be; --accent-soft: #12302f;
+    --band: #0f1a2b; --band-ink: #e7eef6; --band-muted: #93a6bc; --band-line: #263a57; --band-accent: #63d3ca;
+    --code-bg: #0a1220; --code-ink: #dde6f1; --code-line: #1d2b45;
+    --good: #62c98a; --good-soft: #11301e; --bad: #f08376; --bad-soft: #3a1915; --warn: #e2b450; --warn-soft: #30260e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c131b; --surface: #131d28; --ink: #e2e9ef; --muted: #93a3b3; --line: #243242;
+  --accent: #45c6be; --accent-soft: #12302f;
+  --band: #0f1a2b; --band-ink: #e7eef6; --band-muted: #93a6bc; --band-line: #263a57; --band-accent: #63d3ca;
+  --code-bg: #0a1220; --code-ink: #dde6f1; --code-line: #1d2b45;
+  --good: #62c98a; --good-soft: #11301e; --bad: #f08376; --bad-soft: #3a1915; --warn: #e2b450; --warn-soft: #30260e;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 17px; line-height: 1.6; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+.wrap { max-width: 1200px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* header band */
+.top { background: var(--band); color: var(--band-ink); }
+.top-inner { padding-block: 44px 34px; display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 36px; align-items: end; }
+.eyebrow { margin: 0 0 6px; font-family: var(--f-display); font-weight: 600; font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; color: var(--band-accent); }
+h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(2.3rem, 5.5vw, 3.6rem); line-height: 1.02; letter-spacing: -.01em; text-wrap: balance; }
+.lede { margin: 14px 0 0; max-width: 60ch; color: var(--band-muted); font-size: 1.05rem; }
+.progress { border: 1px solid var(--band-line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 10px; }
+.progress-label { font-family: var(--f-display); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--band-muted); }
+.meter { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+.meter span { height: 8px; border-radius: 2px; background: var(--band-line); }
+.meter span.on { background: var(--band-accent); }
+.progress p { margin: 0; font-size: .95rem; font-variant-numeric: tabular-nums; }
+.progress strong { color: var(--band-accent); font-weight: 600; }
+.reset { justify-self: start; background: none; border: 1px solid var(--band-line); color: var(--band-muted); font: inherit; font-size: .85rem; padding: 4px 12px; border-radius: 6px; cursor: pointer; }
+.reset:hover { color: var(--band-ink); border-color: var(--band-muted); }
+.reset.confirm { color: var(--band-ink); border-color: var(--band-accent); }
+
+/* layout */
+.layout { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 52px; padding-block: 40px 80px; }
+.toc { position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); align-self: start; max-height: calc(100vh - 32px); overflow-y: auto; }
+.toc-title { margin: 0 0 10px; font-family: var(--f-display); font-size: .8rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 6px; align-items: baseline; padding: 6px 8px; border-radius: 6px; text-decoration: none; color: var(--ink); font-size: .95rem; line-height: 1.3; }
+.toc a:hover { background: var(--surface); }
+.toc a.active { background: var(--accent-soft); }
+.toc .n { font-family: var(--f-mono); font-size: .75rem; color: var(--muted); }
+.toc .st { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.toc a.done .st { color: var(--good); }
+
+main { min-width: 0; display: flex; flex-direction: column; gap: 72px; }
+
+/* plan */
+.plan { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 24px 26px; display: grid; gap: 14px; }
+.plan h2 { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: 1.6rem; }
+.plan p { margin: 0; max-width: 68ch; }
+.blocks { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: b; }
+.blocks li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 14px; align-items: baseline; padding-top: 10px; border-top: 1px solid var(--line); }
+.blocks .time { font-family: var(--f-mono); font-size: .82rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+.blocks b { font-weight: 600; }
+
+/* topic */
+.topic { display: flex; flex-direction: column; gap: 22px; scroll-margin-top: 20px; }
+.topic-head { display: flex; gap: 18px; align-items: flex-start; border-bottom: 1px solid var(--line); padding-bottom: 16px; }
+.topic-head .num { font-family: var(--f-mono); font-size: 1.05rem; font-weight: 500; color: var(--accent); padding-top: 9px; }
+.topic-head h2 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: clamp(1.7rem, 3.5vw, 2.25rem); line-height: 1.1; text-wrap: balance; }
+.topic-head .scope { margin: 6px 0 0; color: var(--muted); max-width: 66ch; }
+h3 { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: .86rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.block { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.know { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; max-width: 72ch; }
+.know li::marker { color: var(--accent); }
+p.note { margin: 0; max-width: 70ch; }
+code { font-family: var(--f-mono); font-size: .84em; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+
+figure.code { margin: 0; background: var(--code-bg); border-radius: 8px; overflow: hidden; min-width: 0; }
+figure.code figcaption { font-family: var(--f-mono); font-size: .75rem; color: var(--c-com); padding: 8px 16px; border-bottom: 1px solid var(--code-line); }
+figure.code pre { margin: 0; padding: 14px 16px 16px; overflow-x: auto; }
+figure.code code { background: none; padding: 0; border-radius: 0; color: var(--code-ink); font-size: 13.5px; line-height: 1.6; overflow-wrap: normal; white-space: pre; display: block; }
+.t-kw { color: var(--c-kw); }
+.t-str { color: var(--c-str); }
+.t-com { color: var(--c-com); font-style: italic; }
+.t-num { color: var(--c-num); }
+.t-dec { color: var(--c-dec); }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.pair > * { min-width: 0; }
+
+.watch { background: var(--warn-soft); border-radius: 10px; padding: 18px 22px; display: grid; gap: 10px; }
+.watch h3 { color: var(--warn); }
+.watch ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; max-width: 72ch; }
+
+/* SOLID */
+.solid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; }
+.principle { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 8px; align-content: start; }
+.principle .abbr { font-family: var(--f-display); font-weight: 700; font-size: 1.5rem; color: var(--accent); line-height: 1; }
+.principle .name { font-family: var(--f-display); font-weight: 600; font-size: 1.1rem; margin-left: 6px; color: var(--ink); }
+.principle p { margin: 0; font-size: .95rem; }
+.principle .lbl { font-family: var(--f-display); font-weight: 600; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+
+/* behave flow */
+.flow { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; max-width: 640px; }
+.flow li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; align-items: start; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.flow li:last-child { border-bottom: 0; }
+.flow .i { font-family: var(--f-mono); font-size: .8rem; color: var(--accent); padding-top: 3px; }
+.flow .indent { padding-left: 22px; }
+.flow span.d { color: var(--muted); font-size: .92rem; }
+
+/* quiz */
+.quiz { display: grid; gap: 12px; }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.quiz-score { font-family: var(--f-mono); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 10px; }
+.q-text { margin: 0; font-weight: 500; }
+.q-text .qn { font-family: var(--f-mono); font-size: .8rem; color: var(--muted); margin-right: 8px; }
+.opts { display: grid; gap: 6px; }
+.opt { text-align: left; font: inherit; font-size: .97rem; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 7px; padding: 9px 13px; cursor: pointer; line-height: 1.4; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.correct { background: var(--good-soft); border-color: var(--good); }
+.opt.wrong { background: var(--bad-soft); border-color: var(--bad); }
+.opt.dim { opacity: .6; }
+.explain { margin: 0; font-size: .95rem; display: flex; gap: 10px; flex-wrap: wrap; align-items: baseline; }
+.verdict { font-weight: 600; }
+.verdict.good { color: var(--good); }
+.verdict.bad { color: var(--bad); }
+.retry { background: none; border: 0; padding: 0; font: inherit; font-size: .9rem; color: var(--accent); text-decoration: underline; cursor: pointer; }
+
+.done-row { display: flex; align-items: center; gap: 10px; font-weight: 500; cursor: pointer; width: fit-content; }
+.done-row input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+/* cheat sheet */
+.sheet { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.sheet section { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.sheet h3 { color: var(--accent); }
+.sheet dl { margin: 0; display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr); gap: 6px 14px; font-size: .92rem; }
+.sheet dt code { white-space: nowrap; }
+.sheet dd { margin: 0; color: var(--muted); }
+
+@media (max-width: 900px) {
+  .top-inner { grid-template-columns: 1fr; padding-block: 32px 26px; }
+  .layout { grid-template-columns: 1fr; gap: 28px; padding-block: 24px 60px; }
+  .toc { position: static; max-height: none; overflow: visible; }
+  .toc ol { display: flex; overflow-x: auto; gap: 6px; padding-bottom: 6px; }
+  .toc li { flex: none; }
+  .toc a { grid-template-columns: auto auto; background: var(--surface); border: 1px solid var(--line); }
+  .toc .st { display: none; }
+  .blocks li { grid-template-columns: 1fr; gap: 2px; }
+  .sheet dl { grid-template-columns: 1fr; gap: 2px; }
+  .sheet dd { margin-bottom: 8px; }
+}
+</style>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div>
+      <p class="eyebrow">Assessment study guide</p>
+      <h1>IVI Automation Prep</h1>
+      <p class="lede">All ten topics from your prep sheet. Each one has the key ideas, an infotainment-themed code example, the mistakes that cost marks, and a quick self-check.</p>
+    </div>
+    <div class="progress" aria-live="polite">
+      <span class="progress-label">Your progress</span>
+      <div class="meter" id="meter"></div>
+      <p><strong id="reviewed">0</strong> of 10 topics reviewed</p>
+      <p><strong id="correct">0</strong> of <span id="total">0</span> questions correct · <span id="answered">0</span> answered</p>
+      <button class="reset" id="reset" type="button">Reset progress</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <nav class="toc" aria-label="Topics">
+    <p class="toc-title">Topics</p>
+    <ol id="toc"></ol>
+  </nav>
+
+  <main>
+    <section class="plan" id="plan">
+      <h2>Tonight's plan</h2>
+      <p>About three hours. Read each topic, type the code out yourself rather than just reading it, then answer the questions. If a section feels shaky, watch the matching clip from your prep sheet.</p>
+      <ol class="blocks">
+        <li><span class="time">15 min</span><span><b>Set up a practice folder.</b> <code>pip install pytest mypy ruff behave</code>, then make <code>ivi/</code>, <code>tests/</code> and <code>features/steps/</code>.</span></li>
+        <li><span class="time">40 min</span><span><b>Topics 1–3.</b> Classes, inheritance, SOLID. These show up as "spot the problem" and refactoring questions.</span></li>
+        <li><span class="time">60 min</span><span><b>Topics 4–7.</b> Pytest, fixtures, mocking, parametrize. Highest weight, and they build on each other. Run the tests.</span></li>
+        <li><span class="time">30 min</span><span><b>Topics 8–9.</b> Run mypy and ruff on deliberately broken code so the error messages look familiar.</span></li>
+        <li><span class="time">30 min</span><span><b>Topic 10.</b> Write one feature file and its steps, then run <code>behave</code>.</span></li>
+        <li><span class="time">15 min</span><span><b>Retake missed questions</b> and skim the command cheat sheet at the bottom.</span></li>
+      </ol>
+    </section>
+
+    <!-- 1 -->
+    <section class="topic" id="t1" data-topic="1">
+      <header class="topic-head"><span class="num">01</span><div><h2>Python Classes &amp; OOP</h2><p class="scope">Classes, objects, attributes, methods, constructors, encapsulation, and object state.</p></div></header>
+      <div class="block">
+        <h3>What to know</h3>
+        <ul class="know">
+          <li>A class is a blueprint; an object (instance) is one thing built from it. <code>__init__</code> is the constructor and sets the starting state.</li>
+          <li><code>self</code> is the instance. Instance attributes (<code>self.x</code>) belong to one object. Class attributes, written in the class body, are shared by every instance.</li>
+          <li>Methods are functions defined in the class that read or change the object's state.</li>
+          <li>Encapsulation is by convention: <code>_name</code> means internal, <code>__name</code> triggers name mangling. <code>@property</code> exposes a value read-only or validates it on assignment.</li>
+          <li><code>@classmethod</code> receives the class as <code>cls</code> and is used for alternate constructors. <code>@staticmethod</code> receives neither the class nor the instance.</li>
+          <li><code>__repr__</code> returns a developer-friendly string. It's what pytest shows in failure output.</li>
+        </ul>
+      </div>
+      <figure class="code"><figcaption>ivi/radio.py</figcaption><pre><code data-lang="python">
+class RadioTuner:
+    MIN_FREQ = 87.5    # class attributes: shared by all tuners
+    MAX_FREQ = 108.0
+
+    def __init__(self, frequency: float = 87.5) -&gt; None:
+        self._frequency = frequency    # instance state, "internal" by convention
+        self._is_on = False
+
+    @classmethod
+    def from_preset(cls, preset: int) -&gt; "RadioTuner":
+        presets = {1: 89.3, 2: 101.1, 3: 104.5}
+        return cls(presets[preset])    # alternate constructor
+
+    @property
+    def frequency(self) -&gt; float:     # read: tuner.frequency
+        return self._frequency
+
+    @frequency.setter
+    def frequency(self, value: float) -&gt; None:   # write: tuner.frequency = 99.5
+        if not self.MIN_FREQ &lt;= value &lt;= self.MAX_FREQ:
+            raise ValueError(f"{value} MHz out of FM band")
+        self._frequency = value
+
+    @property
+    def is_on(self) -&gt; bool:          # read-only: no setter defined
+        return self._is_on
+
+    def power_on(self) -&gt; None:
+        self._is_on = True
+
+    def power_off(self) -&gt; None:
+        self._is_on = False
+
+    def __repr__(self) -&gt; str:
+        return f"RadioTuner(frequency={self._frequency})"
+
+
+tuner = RadioTuner()
+tuner.power_on()
+tuner.frequency = 101.1     # runs the setter, passes validation
+tuner.frequency = 200       # ValueError: 200 MHz out of FM band
+tuner.is_on = False         # AttributeError: property has no setter
+</code></pre></figure>
+      <div class="watch">
+        <h3>Watch out for</h3>
+        <ul>
+          <li>Mutable default arguments. <code>def __init__(self, presets=[])</code> shares one list across every instance. Use <code>presets=None</code> and create the list inside.</li>
+          <li>A list or dict in the class body (<code>presets = []</code>) is also shared. Per-object state belongs in <code>__init__</code>.</li>
+          <li>Forgetting <code>self</code> as the first parameter gives <code>TypeError: ... takes 0 positional arguments but 1 was given</code>.</li>
+          <li>A property and its stored attribute need different names (<code>frequency</code> and <code>_frequency</code>). Otherwise the setter calls itself until <code>RecursionError</code>.</li>
+        </ul>
+      </div>
+      <div class="quiz" data-quiz="1"></div>
+      <label class="done-row"><input type="checkbox" id="done-1" data-done="1"> I've reviewed this topic</label>
+    </section>
+
+    <!-- 2 -->
+    <section class="topic" id="t2" data-topic="2">
+      <header class="topic-head"><span class="num">02</span><div><h2>Inheritance &amp; Polymorphism</h2><p class="scope">Base and derived classes, method overriding, <code>super()</code>, and a shared interface with different implementations.</p></div></header>
+      <div class="block">
+        <h3>What to know</h3>
+        <ul class="know">
+          <li>A derived class (<code>class BluetoothAudio(MediaSource)</code>) inherits every attribute and method of its base class.</li>
+          <li>Overriding means defining a method with the same name in the subclass. The subclass version is used.</li>
+          <li><code>super()</code> calls the parent's version. In a subclass constructor, call <code>super().__init__(...)</code> so the parent's setup runs.</li>
+          <li>Polymorphism: code that calls <code>source.play()</code> works with any subclass, and each one behaves its own way. The caller never checks the type.</li>
+          <li>Abstract base classes (<code>ABC</code> with <code>@abstractmethod</code>) define a required interface. A class that leaves an abstract method unimplemented can't be instantiated.</li>
+          <li><code>isinstance(obj, Base)</code> is True for subclasses too. Method lookup follows the MRO (<code>BluetoothAudio.__mro__</code>).</li>
+        </ul>
+      </div>
+      <figure class="code"><figcaption>ivi/media.py</figcaption><pre><code data-lang="python">
+from abc import ABC, abstractmethod
+
+
+class MediaSource:
+    def __init__(self, name: str) -&gt; None:
+        self.name = name
+        self.playing = False
+
+    def play(self) -&gt; str:
+        self.playing = True
+        return f"{self.name}: playing"
+
+
+class BluetoothAudio(MediaSource):
+    def __init__(self, device: str) -&gt; None:
+        super().__init__("Bluetooth")    # run the parent's setup first
+        self.device = device
+
+    def play(self) -&gt; str:               # override
+        base = super().play()            # reuse the parent's logic
+        return f"{base} from {self.device}"
+
+
+class USBAudio(MediaSource):
+    def __init__(self) -&gt; None:
+        super().__init__("USB")          # play() is inherited unchanged
+
+
+def start_all(sources: list[MediaSource]) -&gt; list[str]:
+    return [s.play() for s in sources]   # same call, different behavior
+
+
+start_all([BluetoothAudio("Pixel 8"), USBAudio()])
+# ['Bluetooth: playing from Pixel 8', 'USB: playing']
+
+
+class Display(ABC):                      # an interface every screen must follow
+    @abstractmethod
+    def render(self, text: str) -&gt; None: ...
+
+
+class ClusterDisplay(Display):
+    def render(self, text: str) -&gt; None:
+        print(f"[cluster] {text}")
+
+
+Display()   # TypeError: Can't instantiate abstract class Display ...
+</code></pre></figure>
+      <div class="watch">
+        <h3>Watch out for</h3>
+        <ul>
+          <li>Defining <code>__init__</code> in a subclass replaces the parent's. Without <code>super().__init__()</code> the parent's attributes are never set, and you get <code>AttributeError</code> later.</li>
+          <li>Overriding a method with a different signature (an extra required argument) breaks callers that treat the object as the base type.</li>
+          <li><code>type(x) == MediaSource</code> is False for subclasses. Use <code>isinstance</code> when you mean "is a kind of".</li>
+        </ul>
+      </div>
+      <div class="quiz" data-quiz="2"></div>
+      <label class="done-row"><input type="checkbox" id="done-2" data-done="2"> I've reviewed this topic</label>
+    </section>
+
+    <!-- 3 -->
+    <section class="topic" id="t3" data-topic="3">
+      <header class="topic-head"><span class="num">03</span><div><h2>SOLID Principles</h2><p class="scope">Recognize SRP, OCP, LSP, ISP and DIP and apply them in small framework refactoring examples.</p></div></header>
+      <div class="solid">
+        <div class="principle"><div><span class="abbr">S</span><span class="name">Single Responsibility</span></div>
+          <p>A class should have one reason to change.</p>
+          <p><span class="lbl">Smell</span><code>HeadUnitTester</code> connects to the CAN bus, runs the test steps and writes the HTML report.</p>
+          <p><span class="lbl">Fix</span>Split into <code>CanClient</code>, <code>TestSteps</code> and <code>ReportWriter</code>.</p></div>
+        <div class="principle"><div><span class="abbr">O</span><span class="name">Open/Closed</span></div>
+          <p>Open for extension, closed for modification.</p>
+          <p><span class="lbl">Smell</span>An <code>if source == "usb": ... elif source == "bt": ...</code> chain you edit every time a source is added.</p>
+          <p><span class="lbl">Fix</span>A <code>MediaSource</code> base class. Adding CarPlay means a new <code>CarPlayAudio</code> subclass, no edits to existing code.</p></div>
+        <div class="principle"><div><span class="abbr">L</span><span class="name">Liskov Substitution</span></div>
+          <p>A subclass must work anywhere its base class works.</p>
+          <p><span class="lbl">Smell</span><code>ReadOnlyPresets(Presets)</code> overrides <code>save()</code> to raise <code>NotImplementedError</code>.</p>
+          <p><span class="lbl">Fix</span>Don't inherit. Use separate readable and writable interfaces.</p></div>
+        <div class="principle"><div><span class="abbr">I</span><span class="name">Interface Segregation</span></div>
+          <p>Don't force a class to implement methods it doesn't use.</p>
+          <p><span class="lbl">Smell</span>A <code>VehicleModule</code> interface with <code>play_audio()</code>, <code>set_temperature()</code> and <code>navigate_to()</code>. The HVAC class stubs out two of them.</p>
+          <p><span class="lbl">Fix</span>Small interfaces: <code>AudioOutput</code>, <code>ClimateControl</code>, <code>Navigator</code>.</p></div>
+        <div class="principle"><div><span class="abbr">D</span><span class="name">Dependency Inversion</span></div>
+          <p>Depend on abstractions, not concrete classes.</p>
+          <p><span class="lbl">Smell</span><code>HvacController.__init__</code> creates <code>PeakCanBus("PCAN_USBBUS1")</code> itself, so every test needs real hardware.</p>
+          <p><span class="lbl">Fix</span>Accept a <code>Bus</code> in the constructor. Production passes a real bus; tests pass a Mock.</p></div>
+      </div>
+      <div class="pair">
+        <figure class="code"><figcaption>Before: hard-wired dependency</figcaption><pre><code data-lang="python">
+class HvacController:
+    def __init__(self) -&gt; None:
+        # can't test without the USB adapter
+        self.bus = PeakCanBus("PCAN_USBBUS1")
+
+    def set_temp(self, celsius: int) -&gt; None:
+        self.bus.send(0x3A0, bytes([celsius]))
+</code></pre></figure>
+        <figure class="code"><figcaption>After: dependency injected (DIP)</figcaption><pre><code data-lang="python">
+from typing import Protocol
+
+
+class Bus(Protocol):
+    def send(self, msg_id: int, data: bytes) -&gt; None: ...
+
+
+class HvacController:
+    def __init__(self, bus: Bus) -&gt; None:
+        self.bus = bus
+
+    def set_temp(self, celsius: int) -&gt; None:
+        self.bus.send(0x3A0, bytes([celsius]))
+</code></pre></figure>
+      </div>
+      <p class="note">In refactoring questions, name the principle and say what changes: "split X into Y and Z", "add a subclass instead of another elif", "inject the bus through the constructor". DIP is also what makes mocking easy in topic 6.</p>
+      <div class="quiz" data-quiz="3"></div>
+      <label class="done-row"><input type="checkbox" id="done-3" data-done="3"> I've reviewed this topic</label>
+    </section>
+
+    <!-- 4 -->
+    <section class="topic" id="t4" data-topic="4">
+      <header class="topic-head"><span class="num">04</span><div><h2>Pytest Basics</h2><p class="scope">Test discovery, assertions, exception testing, running tests, and interpreting failures.</p></div></header>
+      <div class="block">
+        <h3>What to know</h3>
+        <ul class="know">
+          <li>Discovery: files named <code>test_*.py</code> or <code>*_test.py</code>, functions starting with <code>test_</code>, and classes starting with <code>Test</code> that have no <code>__init__</code>.</li>
+          <li>Use a plain <code>assert</code>. Pytest rewrites it so a failure shows both sides of the comparison.</li>
+          <li><code>pytest.raises(ValueError, match="...")</code> checks that code raises. <code>match</code> is a regular expression searched in the error message.</li>
+          <li><code>pytest.approx</code> compares floats. <code>0.1 + 0.2 == 0.3</code> is False in Python.</li>
+          <li>Result letters: <code>.</code> passed, <code>F</code> failed (an assertion or exception in the test body), <code>E</code> error (an exception in a fixture's setup or teardown), <code>s</code> skipped, <code>x</code> expected failure.</li>
+        </ul>
+      </div>
+      <figure class="code"><figcaption>tests/test_radio.py</figcaption><pre><code data-lang="python">
+import pytest
+
+from ivi.radio import RadioTuner
+
+
+def test_default_frequency():
+    assert RadioTuner().frequency == 87.5
+
+
+def test_rejects_out_of_band():
+    tuner = RadioTuner()
+    with pytest.raises(ValueError, match="out of FM band"):
+        tuner.frequency = 200
+
+
+def test_preset_two():
+    tuner = RadioTuner.from_preset(2)
+    assert tuner.frequency == pytest.approx(101.1)
+
+
+class TestPower:                 # grouping; no __init__ allowed
+    def test_starts_off(self):
+        assert not RadioTuner().is_on
+
+    def test_power_on(self):
+        tuner = RadioTuner()
+        tuner.power_on()
+        assert tuner.is_on
+</code></pre></figure>
+      <div class="block">
+        <h3>Reading a failure</h3>
+        <figure class="code"><figcaption>pytest output</figcaption><pre><code data-lang="text">
+______________________ test_preset_two ______________________
+
+    def test_preset_two():
+        tuner = RadioTuner.from_preset(2)
+&gt;       assert tuner.frequency == 101.3
+E       assert 101.1 == 101.3
+E        +  where 101.1 = RadioTuner(frequency=101.1).frequency
+
+tests/test_radio.py:17: AssertionError
+================== short test summary info ==================
+FAILED tests/test_radio.py::test_preset_two - assert 101.1 == 101.3
+</code></pre></figure>
+        <p class="note">The <code>&gt;</code> marks the failing line. <code>E</code> lines show the actual value on the left and the expected value on the right. The last block gives the file, line and the test's node ID, which you can pass straight back to pytest to rerun just that test.</p>
+      </div>
+      <figure class="code"><figcaption>Running tests</figcaption><pre><code data-lang="bash">
+pytest                                   # discover and run everything
+pytest -v                                # one line per test
+pytest tests/test_radio.py               # one file
+pytest tests/test_radio.py::test_preset_two
+pytest tests/test_radio.py::TestPower::test_starts_off
+pytest -k "power and not off"            # select by name expression
+pytest -m smoke                          # select by @pytest.mark.smoke
+pytest -x                                # stop at first failure
+pytest --lf                              # rerun only last failures
+pytest -s                                # show print() output
+</code></pre></figure>
+      <div class="quiz" data-quiz="4"></div>
+      <label class="done-row"><input type="checkbox" id="done-4" data-done="4"> I've reviewed this topic</label>
+    </section>
+
+    <!-- 5 -->
+    <section class="topic" id="t5" data-topic="5">
+      <header class="topic-head"><span class="num">05</span><div><h2>Fixtures</h2><p class="scope">Reusable setup and cleanup with <code>@pytest.fixture</code>, including isolated test objects and dependencies.</p></div></header>
+      <div class="block">
+        <h3>What to know</h3>
+        <ul class="know">
+          <li>A fixture is a function decorated with <code>@pytest.fixture</code>. A test gets it by naming it as a parameter. You never call it yourself.</li>
+          <li>Code before <code>yield</code> is setup. Code after <code>yield</code> is teardown and runs even if the test fails.</li>
+          <li>Scope controls how often it's created: <code>function</code> (default, a fresh one per test), <code>class</code>, <code>module</code>, <code>package</code>, <code>session</code>.</li>
+          <li>Fixtures in <code>conftest.py</code> are available to every test in that folder and below, with no import.</li>
+          <li>Fixtures can request other fixtures. <code>autouse=True</code> applies a fixture to every test in its scope.</li>
+          <li>Built-ins worth knowing: <code>tmp_path</code> (a temporary directory), <code>monkeypatch</code> (set attributes or env vars, undone after the test), <code>capsys</code> (capture printed output).</li>
+        </ul>
+      </div>
+      <figure class="code"><figcaption>tests/conftest.py</figcaption><pre><code data-lang="python">
+import pytest
+
+from ivi.hvac import HvacController
+from ivi.radio import RadioTuner
+from tests.fakes import FakeCanBus
+
+
+@pytest.fixture
+def tuner():
+    t = RadioTuner()
+    t.power_on()
+    yield t              # the test runs here
+    t.power_off()        # teardown: runs even if the test failed
+
+
+@pytest.fixture(scope="session")
+def can_bus():
+    bus = FakeCanBus()   # expensive: created once for the whole run
+    yield bus
+    bus.shutdown()
+
+
+@pytest.fixture
+def hvac(can_bus):       # a fixture that uses another fixture
+    return HvacController(can_bus)
+</code></pre></figure>
+      <figure class="code"><figcaption>tests/test_hvac.py</figcaption><pre><code data-lang="python">
+def test_tune(tuner):                    # gets a fresh, powered-on tuner
+    tuner.frequency = 99.5
+    assert tuner.frequency == 99.5
+
+
+def test_set_temp(hvac, can_bus):        # same can_bus object hvac received
+    hvac.set_temp(22)
+    assert can_bus.last_frame == (0x3A0, bytes([22]))
+
+
+def test_export_log(tmp_path):
+    log = tmp_path / "hvac.log"          # pathlib.Path in a temp folder
+    log.write_text("temp=22")
+    assert log.read_text() == "temp=22"
+</code></pre></figure>
+      <div class="watch">
+        <h3>Watch out for</h3>
+        <ul>
+          <li>If setup raises before <code>yield</code>, the teardown doesn't run and the test is reported as <code>E</code>.</li>
+          <li>A broader-scoped fixture can't request a narrower one. A <code>session</code> fixture that asks for a <code>function</code> fixture fails with <code>ScopeMismatch</code>.</li>
+          <li>Sharing a mutable object through a module or session fixture breaks isolation: one test's changes leak into the next. Keep function scope for objects that tests modify.</li>
+          <li>Calling a fixture directly (<code>tuner()</code>) raises an error. Request it as a parameter.</li>
+        </ul>
+      </div>
+      <div class="quiz" data-quiz="5"></div>
+      <label class="done-row"><input type="checkbox" id="done-5" data-done="5"> I've reviewed this topic</label>
+    </section>
+
+    <!-- 6 -->
+    <section class="topic" id="t6" data-topic="6">
+      <header class="topic-head"><span class="num">06</span><div><h2>Mocking with unittest.mock</h2><p class="scope"><code>Mock</code>, <code>MagicMock</code>, <code>patch</code>, <code>side_effect</code>, and verifying calls when hardware or services are unavailable.</p></div></header>
+      <div class="block">
+        <h3>What to know</h3>
+        <ul class="know">
+          <li><code>Mock()</code> records every call made to it and returns a new Mock for any attribute you touch.</li>
+          <li><code>MagicMock()</code> also supports magic methods such as <code>len()</code>, iteration and <code>with</code>. <code>patch</code> creates MagicMocks by default.</li>
+          <li><code>return_value</code> sets what a call returns. <code>side_effect</code> can be an exception (raised), an iterable (one item per call) or a function (called with the same arguments).</li>
+          <li>Verify with <code>assert_called_once_with(...)</code>, <code>assert_called_with(...)</code> (checks only the last call), <code>assert_any_call(...)</code>, <code>assert_not_called()</code>, <code>call_count</code> and <code>call_args_list</code>.</li>
+          <li><code>patch("module.name")</code> replaces a name for the duration of a test. Patch where the name is looked up, not where it was defined.</li>
+          <li><code>spec=RealClass</code> or <code>autospec=True</code> makes the mock reject attributes and call signatures the real object doesn't have.</li>
+        </ul>
+      </div>
+      <figure class="code"><figcaption>tests/test_mocks.py</figcaption><pre><code data-lang="python">
+from unittest.mock import MagicMock, Mock, call, patch
+
+import pytest
+
+from ivi.bluetooth import BluetoothManager
+from ivi.hvac import Bus, HvacController
+
+
+def test_hvac_sends_frame():
+    bus = Mock(spec=Bus)                   # stands in for the CAN adapter
+    HvacController(bus).set_temp(22)
+    bus.send.assert_called_once_with(0x3A0, bytes([22]))
+
+
+def test_hvac_propagates_timeout():
+    bus = Mock(spec=Bus)
+    bus.send.side_effect = TimeoutError("no ACK")   # simulate a dead ECU
+    with pytest.raises(TimeoutError):
+        HvacController(bus).set_temp(22)
+
+
+def test_sequence_of_reads():
+    sensor = Mock()
+    sensor.read.side_effect = [21, 22, 23]          # one value per call
+    assert [sensor.read() for _ in range(3)] == [21, 22, 23]
+
+
+def test_ramp_sends_each_step():
+    bus = Mock(spec=Bus)
+    hvac = HvacController(bus)
+    hvac.set_temp(20)
+    hvac.set_temp(21)
+    assert bus.send.call_args_list == [
+        call(0x3A0, bytes([20])),
+        call(0x3A0, bytes([21])),
+    ]
+
+
+# ivi/bluetooth.py contains:  from ivi.hw import scan_devices
+@patch("ivi.bluetooth.scan_devices")     # patch where it is USED
+def test_pair_first_device(mock_scan):
+    mock_scan.return_value = ["Pixel 8", "iPhone 15"]
+    assert BluetoothManager().pair_first() == "Pixel 8"
+    mock_scan.assert_called_once()
+
+
+def test_context_manager_style():
+    with patch("ivi.bluetooth.scan_devices", return_value=[]) as mock_scan:
+        assert BluetoothManager().pair_first() is None
+    mock_scan.assert_called_once()
+
+
+def test_magic_methods():
+    playlist = MagicMock()
+    playlist.__len__.return_value = 12     # Mock() would not support len()
+    assert len(playlist) == 12
+</code></pre></figure>
+      <figure class="code"><figcaption>Stacked patches: arguments arrive bottom-up</figcaption><pre><code data-lang="python">
+@patch("ivi.media.usb_mount")        # outer  → second argument
+@patch("ivi.media.bt_connect")       # inner  → first argument
+def test_switch_source(mock_bt, mock_usb):
+    ...
+</code></pre></figure>
+      <div class="watch">
+        <h3>Watch out for</h3>
+        <ul>
+          <li>Patching <code>ivi.hw.scan_devices</code> has no effect on a module that already ran <code>from ivi.hw import scan_devices</code>. That module holds its own reference, so patch <code>ivi.bluetooth.scan_devices</code>.</li>
+          <li>Without <code>spec</code>, a mock accepts typos such as <code>bus.sned(...)</code> and the test passes for the wrong reason.</li>
+          <li>An iterable <code>side_effect</code> raises <code>StopIteration</code> once it runs out of items.</li>
+          <li><code>assert_called_with</code> checks only the most recent call. Use <code>assert_any_call</code> or <code>call_args_list</code> to check earlier ones.</li>
+        </ul>
+      </div>
+      <div class="quiz" data-quiz="6"></div>
+      <label class="done-row"><input type="checkbox" id="done-6" data-done="6"> I've reviewed this topic</label>
+    </section>
+
+    <!-- 7 -->
+    <section class="topic" id="t7" data-topic="7">
+      <header class="topic-head"><span class="num">07</span><div><h2>Parametrized Tests</h2><p class="scope">Run one test with multiple datasets using <code>@pytest.mark.parametrize</code>, including valid and invalid transitions.</p></div></header>
+      <div class="block">
+        <h3>What to know</h3>
+        <ul class="know">
+          <li><code>@pytest.mark.parametrize("freq", [87.5, 99.9])</code> runs the test once per value. Each run is reported separately, for example <code>test_valid_frequency[99.9]</code>.</li>
+          <li>For several arguments, pass a comma-separated name string and a list of tuples: <code>"start, action, expected"</code>.</li>
+          <li><code>ids=[...]</code> or <code>pytest.param(..., id="...")</code> gives readable case names. <code>pytest.param(..., marks=pytest.mark.xfail)</code> marks one case.</li>
+          <li>Stacking two parametrize decorators runs every combination.</li>
+          <li>Parametrized arguments and fixtures mix freely; both are just test parameters.</li>
+          <li>For a state machine, write one test for valid transitions and another for invalid ones that expects an exception.</li>
+        </ul>
+      </div>
+      <figure class="code"><figcaption>ivi/player.py: the state machine under test</figcaption><pre><code data-lang="python">
+class InvalidTransition(Exception):
+    pass
+
+
+class MediaPlayer:
+    TRANSITIONS = {
+        ("STOPPED", "play"): "PLAYING",
+        ("PLAYING", "pause"): "PAUSED",
+        ("PAUSED", "play"): "PLAYING",
+        ("PLAYING", "stop"): "STOPPED",
+        ("PAUSED", "stop"): "STOPPED",
+    }
+
+    def __init__(self, state: str = "STOPPED") -&gt; None:
+        self.state = state
+
+    def _go(self, action: str) -&gt; None:
+        key = (self.state, action)
+        if key not in self.TRANSITIONS:
+            raise InvalidTransition(f"cannot {action} from {self.state}")
+        self.state = self.TRANSITIONS[key]
+
+    def play(self) -&gt; None:
+        self._go("play")
+
+    def pause(self) -&gt; None:
+        self._go("pause")
+
+    def stop(self) -&gt; None:
+        self._go("stop")
+</code></pre></figure>
+      <figure class="code"><figcaption>tests/test_player.py</figcaption><pre><code data-lang="python">
+import pytest
+
+from ivi.player import InvalidTransition, MediaPlayer
+
+
+@pytest.mark.parametrize("freq", [87.5, 99.9, 108.0])
+def test_valid_frequency(tuner, freq):          # fixture + parameter together
+    tuner.frequency = freq
+    assert tuner.frequency == freq
+
+
+@pytest.mark.parametrize("freq", [87.4, 108.1, 0, -1])
+def test_invalid_frequency(tuner, freq):
+    with pytest.raises(ValueError):
+        tuner.frequency = freq
+
+
+@pytest.mark.parametrize(
+    "start, action, expected",
+    [
+        ("STOPPED", "play", "PLAYING"),
+        ("PLAYING", "pause", "PAUSED"),
+        ("PAUSED", "play", "PLAYING"),
+        ("PLAYING", "stop", "STOPPED"),
+    ],
+    ids=["stop-play", "play-pause", "pause-play", "play-stop"],
+)
+def test_valid_transition(start, action, expected):
+    player = MediaPlayer(state=start)
+    getattr(player, action)()                   # e.g. player.play()
+    assert player.state == expected
+
+
+@pytest.mark.parametrize(
+    "start, action",
+    [
+        ("STOPPED", "pause"),
+        ("STOPPED", "stop"),
+        pytest.param("PAUSED", "pause", id="double-pause"),
+    ],
+)
+def test_invalid_transition(start, action):
+    player = MediaPlayer(state=start)
+    with pytest.raises(InvalidTransition):
+        getattr(player, action)()
+    assert player.state == start                # state is unchanged
+
+
+@pytest.mark.parametrize("volume", [0, 50])
+@pytest.mark.parametrize("source", ["usb", "bt", "fm"])
+def test_mute_all_sources(source, volume):      # 2 × 3 = 6 tests
+    ...
+</code></pre></figure>
+      <div class="quiz" data-quiz="7"></div>
+      <label class="done-row"><input type="checkbox" id="done-7" data-done="7"> I've reviewed this topic</label>
+    </section>
+
+    <!-- 8 -->
+    <section class="topic" id="t8" data-topic="8">
+      <header class="topic-head"><span class="num">08</span><div><h2>Type Hints + mypy</h2><p class="scope">Annotate parameters and return values; identify incompatible arguments, returns, and undefined names.</p></div></header>
+      <div class="block">
+        <h3>What to know</h3>
+        <ul class="know">
+          <li>Annotate parameters and returns: <code>def tune(self, freq: float) -&gt; None:</code>. Variables too: <code>presets: dict[int, float] = {}</code>.</li>
+          <li>Common types: <code>int</code>, <code>str</code>, <code>list[str]</code>, <code>dict[str, int]</code>, <code>tuple[int, ...]</code>, <code>str | None</code> (same as <code>Optional[str]</code>), <code>Callable[[int], bool]</code>, <code>Any</code>.</li>
+          <li>Hints aren't enforced at runtime. Python runs the code regardless; mypy is the tool that checks.</li>
+          <li>mypy reports incompatible arguments, incompatible return values, undefined names, and attribute access on a value that might be <code>None</code>.</li>
+          <li>Inside <code>if dev is not None:</code> mypy narrows the type, so the error goes away.</li>
+          <li>By default mypy skips the body of a function with no annotations at all. <code>--strict</code> enables the extra checks, including requiring annotations.</li>
+        </ul>
+      </div>
+      <figure class="code"><figcaption>ivi/volume.py, with mypy's messages as comments</figcaption><pre><code data-lang="python">
+def set_volume(level: int) -&gt; int:
+    return "loud"
+    # error: Incompatible return value type (got "str", expected "int")  [return-value]
+
+
+set_volume("10")
+# error: Argument 1 to "set_volume" has incompatible type "str"; expected "int"  [arg-type]
+
+
+def find_device(name: str) -&gt; str | None:
+    devices = ["Pixel 8", "iPhone 15"]
+    return name if name in devices else None
+
+
+dev = find_device("Pixel 8")
+dev.upper()
+# error: Item "None" of "str | None" has no attribute "upper"  [union-attr]
+
+if dev is not None:
+    dev.upper()          # OK: mypy knows dev is str here
+
+print(volum)
+# error: Name "volum" is not defined  [name-defined]
+
+
+def mute(level: int = None) -&gt; None: ...
+# error: Incompatible default for argument "level" (default has type "None",
+#        argument has type "int")  [assignment]
+# fix: level: int | None = None
+</code></pre></figure>
+      <figure class="code"><figcaption>Running mypy</figcaption><pre><code data-lang="bash">
+mypy ivi/                       # check a package
+mypy ivi/volume.py              # check one file
+mypy --strict ivi/              # all strict checks
+mypy --check-untyped-defs ivi/  # also check unannotated function bodies
+# reveal_type(dev) inside code makes mypy print the inferred type
+# x = thing()  # type: ignore[arg-type]   silences one error code on one line
+</code></pre></figure>
+      <div class="watch">
+        <h3>Watch out for</h3>
+        <ul>
+          <li>A function with no annotations at all, like <code>def reset(self):</code>, is treated as untyped and mypy doesn't check inside it. Adding <code>-&gt; None</code> makes it checked.</li>
+          <li><code>list[int]</code> in lowercase needs Python 3.9+, and <code>int | None</code> needs 3.10+ (or <code>from __future__ import annotations</code>).</li>
+          <li>Each mypy line reads <code>file:line: error: message [code]</code>. The bracketed code tells you the kind of problem.</li>
+        </ul>
+      </div>
+      <div class="quiz" data-quiz="8"></div>
+      <label class="done-row"><input type="checkbox" id="done-8" data-done="8"> I've reviewed this topic</label>
+    </section>
+
+    <!-- 9 -->
+    <section class="topic" id="t9" data-topic="9">
+      <header class="topic-head"><span class="num">09</span><div><h2>Ruff + PEP 8</h2><p class="scope">Naming, spacing, imports, line length, linting commands, auto-fix, and project configuration.</p></div></header>
+      <div class="block">
+        <h3>What to know</h3>
+        <ul class="know">
+          <li>Naming: <code>snake_case</code> for functions, variables and modules; <code>PascalCase</code> for classes; <code>UPPER_CASE</code> for constants; a leading underscore for internals.</li>
+          <li>Layout: 4-space indents. PEP 8 says 79 characters per line; Ruff defaults to 88. Two blank lines around top-level functions and classes, one between methods.</li>
+          <li>Imports at the top of the file, one per line, grouped as standard library, then third-party, then local. No <code>from x import *</code>.</li>
+          <li>Compare with None using <code>is</code> / <code>is not</code>. Put spaces around operators and after commas.</li>
+          <li>Ruff is both a linter and a formatter. <code>ruff check</code> reports rule violations; <code>ruff format</code> rewrites layout, Black-style.</li>
+          <li>Rule codes: <code>E</code>/<code>W</code> pycodestyle, <code>F</code> Pyflakes (F401 unused import, F841 unused variable, F821 undefined name), <code>I</code> import sorting, <code>N</code> naming, <code>B</code> bugbear, <code>UP</code> pyupgrade. The default selection is <code>E4</code>, <code>E7</code>, <code>E9</code> and <code>F</code>.</li>
+        </ul>
+      </div>
+      <div class="pair">
+        <figure class="code"><figcaption>Before: what ruff check reports</figcaption><pre><code data-lang="python">
+import os, sys              # E401, F401 (both unused)
+from ivi.radio import *     # F403 star import
+
+
+class radio_helper:         # N801 use CapWords
+    def SetFreq(self, f):   # N802 use lowercase
+        if f == None: return    # E711, E701
+        x = f * 2           # F841 never used
+</code></pre></figure>
+        <figure class="code"><figcaption>After</figcaption><pre><code data-lang="python">
+from ivi.radio import RadioTuner
+
+
+class RadioHelper:
+    def set_freq(self, tuner: RadioTuner, freq: float | None) -&gt; None:
+        if freq is None:
+            return
+        tuner.frequency = freq
+</code></pre></figure>
+      </div>
+      <figure class="code"><figcaption>pyproject.toml</figcaption><pre><code data-lang="toml">
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["build", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "N", "B", "UP"]
+ignore = ["E501"]                     # let the formatter handle long lines
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["N802"]
+
+[tool.ruff.format]
+quote-style = "double"
+</code></pre></figure>
+      <figure class="code"><figcaption>Ruff commands</figcaption><pre><code data-lang="bash">
+ruff check .                     # lint the project
+ruff check --fix .               # apply safe auto-fixes
+ruff check --fix --unsafe-fixes .
+ruff check --select I --fix .    # sort imports only
+ruff check --statistics .        # count violations per rule
+ruff rule F401                   # explain a rule
+ruff format .                    # reformat files
+ruff format --check .            # report files that would change (CI)
+</code></pre></figure>
+      <div class="watch">
+        <h3>Watch out for</h3>
+        <ul>
+          <li><code>ruff check --fix</code> applies only safe fixes. Others need <code>--unsafe-fixes</code>, and some (like naming) are never automatic.</li>
+          <li>E501 (line too long) isn't in the default rule set. Select <code>E</code> or <code>E501</code> to turn it on.</li>
+          <li><code># noqa: F401</code> silences one rule on one line. A bare <code># noqa</code> silences every rule on that line, so prefer the specific code.</li>
+          <li>Lint settings belong under <code>[tool.ruff.lint]</code>. Putting <code>select</code> directly under <code>[tool.ruff]</code> is the older, deprecated form.</li>
+        </ul>
+      </div>
+      <div class="quiz" data-quiz="9"></div>
+      <label class="done-row"><input type="checkbox" id="done-9" data-done="9"> I've reviewed this topic</label>
+    </section>
+
+    <!-- 10 -->
+    <section class="topic" id="t10" data-topic="10">
+      <header class="topic-head"><span class="num">10</span><div><h2>BDD / Gherkin / Behave</h2><p class="scope">Feature files, scenarios, Given/When/Then, step definitions, and Behave's execution flow.</p></div></header>
+      <div class="block">
+        <h3>What to know</h3>
+        <ul class="know">
+          <li>BDD describes behavior in plain language the whole team can read. Gherkin is the syntax; Behave is the Python runner.</li>
+          <li>A <code>.feature</code> file has one <code>Feature</code>, an optional <code>Background</code> (steps run before every scenario), then <code>Scenario</code>s built from Given (starting state), When (action) and Then (expected outcome). <code>And</code> and <code>But</code> take the type of the step before them.</li>
+          <li><code>Scenario Outline</code> with an <code>Examples</code> table runs once per row, filling in the <code>&lt;placeholders&gt;</code>.</li>
+          <li>Step definitions are Python functions decorated with <code>@given</code>, <code>@when</code> or <code>@then</code>. <code>{name}</code> captures text, <code>{n:d}</code> converts to int, <code>{x:f}</code> to float.</li>
+          <li><code>context</code> is passed to every step and hook. Store state on it (<code>context.ivi = ...</code>) to share it between steps.</li>
+          <li>Folder layout: <code>features/*.feature</code>, <code>features/steps/*.py</code>, and <code>features/environment.py</code> for hooks.</li>
+        </ul>
+      </div>
+      <figure class="code"><figcaption>features/radio.feature</figcaption><pre><code data-lang="gherkin">
+@radio
+Feature: FM radio tuning
+  As a driver
+  I want to tune the radio
+  So that I can listen to my station
+
+  Background:
+    Given the infotainment system is powered on
+
+  @smoke
+  Scenario: Tune to a valid station
+    Given the radio is on
+    When I tune to 101.1 MHz
+    Then the display shows "101.1 FM"
+
+  Scenario Outline: Reject frequencies outside the FM band
+    Given the radio is on
+    When I tune to &lt;freq&gt; MHz
+    Then I see the error "Out of band"
+    And the display shows "87.5 FM"
+
+    Examples:
+      | freq  |
+      | 87.4  |
+      | 108.1 |
+      | 0     |
+</code></pre></figure>
+      <figure class="code"><figcaption>features/steps/radio_steps.py</figcaption><pre><code data-lang="python">
+from behave import given, step, then, when
+
+
+@given("the infotainment system is powered on")
+def step_power_on(context):
+    context.ivi.boot()                        # context.ivi made in environment.py
+
+
+@given("the radio is on")
+def step_radio_on(context):
+    context.ivi.radio.power_on()
+
+
+@when("I tune to {freq:f} MHz")               # {freq:f} arrives as a float
+def step_tune(context, freq):
+    context.ivi.radio.tune(freq)
+
+
+@step('the display shows "{text}"')           # @step matches Then and And
+def step_display(context, text):
+    assert context.ivi.display.text == text, context.ivi.display.text
+
+
+@then('I see the error "{message}"')
+def step_error(context, message):
+    assert context.ivi.display.error == message
+</code></pre></figure>
+      <figure class="code"><figcaption>features/environment.py</figcaption><pre><code data-lang="python">
+from ivi.system import InfotainmentSystem
+
+
+def before_all(context):
+    context.config.setup_logging()
+
+
+def before_scenario(context, scenario):
+    context.ivi = InfotainmentSystem(simulated=True)    # fresh system per scenario
+
+
+def after_scenario(context, scenario):
+    if scenario.status.name == "failed":
+        context.ivi.save_screenshot(f"reports/{scenario.name}.png")
+    context.ivi.shutdown()
+</code></pre></figure>
+      <div class="block">
+        <h3>Execution flow</h3>
+        <ol class="flow">
+          <li><span class="i">1</span><span><code>before_all(context)</code> <span class="d">once per run</span></span></li>
+          <li><span class="i">2</span><span><code>before_feature(context, feature)</code> <span class="d">per feature file</span></span></li>
+          <li><span class="i">3</span><span class="indent"><code>before_scenario(context, scenario)</code> <span class="d">per scenario, and per Examples row</span></span></li>
+          <li><span class="i">4</span><span class="indent">Background steps, then the scenario's steps <span class="d">each wrapped in <code>before_step</code> / <code>after_step</code></span></span></li>
+          <li><span class="i">5</span><span class="indent"><code>after_scenario(context, scenario)</code> <span class="d">runs even when a step failed</span></span></li>
+          <li><span class="i">6</span><span><code>after_feature(context, feature)</code></span></li>
+          <li><span class="i">7</span><span><code>after_all(context)</code></span></li>
+        </ol>
+        <p class="note">When a step fails, the remaining steps in that scenario are skipped and Behave moves on to the next scenario.</p>
+      </div>
+      <figure class="code"><figcaption>Running Behave</figcaption><pre><code data-lang="bash">
+behave                                   # run everything under features/
+behave features/radio.feature            # one feature file
+behave features/radio.feature:12         # the scenario at line 12
+behave --tags=@smoke                     # only tagged scenarios
+behave --tags="not @wip"                 # exclude a tag (older: --tags=-@wip)
+behave -n "valid station"                # select by scenario name
+behave --dry-run                         # list undefined steps without running
+behave --no-capture                      # show print() output
+</code></pre></figure>
+      <div class="watch">
+        <h3>Watch out for</h3>
+        <ul>
+          <li>Step text must match exactly, including quotes and punctuation. A mismatch shows as an undefined step; <code>behave --dry-run</code> lists them with ready-to-paste snippets.</li>
+          <li>The keyword type matters. A step defined with <code>@given</code> won't match when it's written as <code>And ...</code> after a When, because that And counts as a When. Use <code>@step</code> for text used in several positions.</li>
+          <li>Two definitions that match the same text cause an <code>AmbiguousStep</code> error.</li>
+          <li>Attributes set on <code>context</code> during a scenario are removed when it ends. Put things that must last the whole run on <code>context</code> in <code>before_all</code>.</li>
+        </ul>
+      </div>
+      <div class="quiz" data-quiz="10"></div>
+      <label class="done-row"><input type="checkbox" id="done-10" data-done="10"> I've reviewed this topic</label>
+    </section>
+
+    <!-- cheat sheet -->
+    <section class="topic" id="cheat">
+      <header class="topic-head"><span class="num">··</span><div><h2>Command cheat sheet</h2><p class="scope">For a last look before the assessment.</p></div></header>
+      <div class="sheet">
+        <section><h3>pytest</h3><dl>
+          <dt><code>pytest -v</code></dt><dd>verbose, one line per test</dd>
+          <dt><code>pytest -k expr</code></dt><dd>select by name</dd>
+          <dt><code>pytest -m mark</code></dt><dd>select by marker</dd>
+          <dt><code>pytest -x</code></dt><dd>stop at first failure</dd>
+          <dt><code>pytest --lf</code></dt><dd>rerun last failures</dd>
+          <dt><code>pytest file::test</code></dt><dd>run one test</dd>
+          <dt><code>pytest -s</code></dt><dd>show print output</dd>
+        </dl></section>
+        <section><h3>unittest.mock</h3><dl>
+          <dt><code>m.return_value</code></dt><dd>what a call returns</dd>
+          <dt><code>m.side_effect</code></dt><dd>raise, sequence, or function</dd>
+          <dt><code>assert_called_once_with</code></dt><dd>exactly one call, these args</dd>
+          <dt><code>assert_called_with</code></dt><dd>last call only</dd>
+          <dt><code>assert_not_called</code></dt><dd>never called</dd>
+          <dt><code>call_args_list</code></dt><dd>every call, in order</dd>
+          <dt><code>patch("where.used")</code></dt><dd>replace a name in a module</dd>
+        </dl></section>
+        <section><h3>mypy</h3><dl>
+          <dt><code>mypy pkg/</code></dt><dd>type-check a package</dd>
+          <dt><code>mypy --strict</code></dt><dd>all strict checks</dd>
+          <dt><code>[arg-type]</code></dt><dd>wrong argument type</dd>
+          <dt><code>[return-value]</code></dt><dd>wrong return type</dd>
+          <dt><code>[name-defined]</code></dt><dd>undefined name</dd>
+          <dt><code>[union-attr]</code></dt><dd>attribute on possible None</dd>
+        </dl></section>
+        <section><h3>ruff</h3><dl>
+          <dt><code>ruff check .</code></dt><dd>lint</dd>
+          <dt><code>ruff check --fix .</code></dt><dd>lint and auto-fix</dd>
+          <dt><code>ruff format .</code></dt><dd>reformat</dd>
+          <dt><code>F401</code></dt><dd>unused import</dd>
+          <dt><code>F841</code></dt><dd>unused variable</dd>
+          <dt><code>E711</code></dt><dd>use <code>is None</code></dd>
+          <dt><code>N801 / N802</code></dt><dd>class / function naming</dd>
+        </dl></section>
+        <section><h3>behave</h3><dl>
+          <dt><code>behave</code></dt><dd>run features/</dd>
+          <dt><code>--tags=@smoke</code></dt><dd>run by tag</dd>
+          <dt><code>--dry-run</code></dt><dd>find undefined steps</dd>
+          <dt><code>-n "name"</code></dt><dd>run by scenario name</dd>
+          <dt><code>environment.py</code></dt><dd>before_/after_ hooks</dd>
+          <dt><code>steps/</code></dt><dd>step definitions folder</dd>
+        </dl></section>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const TOPICS = ["Python Classes & OOP", "Inheritance & Polymorphism", "SOLID Principles", "Pytest Basics", "Fixtures", "Mocking with unittest.mock", "Parametrized Tests", "Type Hints + mypy", "Ruff + PEP 8", "BDD / Gherkin / Behave"];
+const SOLID_OPTS = ["Single Responsibility", "Open/Closed", "Liskov Substitution", "Interface Segregation", "Dependency Inversion"];
+
+const QUIZ = {
+  1: [
+    { q: `What does <code>self</code> refer to inside a method?`,
+      o: ["The class itself", "The instance the method was called on", "The parent class", "The module the class is defined in"], a: 1,
+      e: `<code>tuner.power_on()</code> is shorthand for <code>RadioTuner.power_on(tuner)</code>, so <code>self</code> is <code>tuner</code>.` },
+    { q: `<code>class Tuner</code> has <code>def __init__(self, presets=[])</code>. You create <code>a = Tuner()</code> and <code>b = Tuner()</code>, then run <code>a.presets.append(101.1)</code>. What is <code>b.presets</code>?`,
+      o: ["<code>[]</code>", "<code>[101.1]</code>", "<code>None</code>", "AttributeError"], a: 1,
+      e: `Default values are evaluated once, when the function is defined, so both objects share one list. Use <code>presets=None</code> and create the list inside <code>__init__</code>.` },
+    { q: `A class <code>BtDevice</code> stores <code>self.__pin</code>. How can code outside the class still reach it?`,
+      o: ["It can't; it's truly private", "<code>obj.__pin</code>", "<code>obj._BtDevice__pin</code>", "<code>obj.pin</code>"], a: 2,
+      e: `Double underscores trigger name mangling, not real privacy. Python renames the attribute to <code>_ClassName__attr</code>.` },
+  ],
+  2: [
+    { q: `<code>BluetoothAudio</code> defines its own <code>__init__</code> but never calls <code>super().__init__()</code>. The parent's constructor sets <code>self.playing</code>. What happens when you read <code>self.playing</code>?`,
+      o: ["It's False", "It's None", "AttributeError", "It's inherited anyway"], a: 2,
+      e: `The subclass <code>__init__</code> replaces the parent's, so the line that creates <code>self.playing</code> never runs.` },
+    { q: `<code>USBAudio</code> subclasses <code>MediaSource</code>. What does <code>isinstance(USBAudio(), MediaSource)</code> return?`,
+      o: ["True", "False", "TypeError", "It depends on the MRO"], a: 0,
+      e: `<code>isinstance</code> checks the whole inheritance chain. <code>type(x) == MediaSource</code> would be False.` },
+    { q: `<code>Display(ABC)</code> has an abstract <code>render()</code>. <code>HudDisplay(Display)</code> doesn't implement it. When does it fail?`,
+      o: ["When the module is imported", "When <code>HudDisplay()</code> is created", "When <code>render()</code> is called", "It never fails"], a: 1,
+      e: `Python raises <code>TypeError: Can't instantiate abstract class</code> at the moment you try to create the object.` },
+  ],
+  3: [
+    { q: `Adding a new media source means editing the long <code>if/elif</code> chain inside <code>play()</code>. Which principle is violated?`, o: SOLID_OPTS, a: 1,
+      e: `Open/Closed: you should be able to add behavior (a new subclass) without modifying existing, tested code.` },
+    { q: `<code>TestReport</code> formats the HTML, emails it, and uploads it to Jira.`, o: SOLID_OPTS, a: 0,
+      e: `Single Responsibility: three reasons to change. Split it into a formatter, a mailer and an uploader.` },
+    { q: `<code>HvacController</code> creates its own <code>PeakCanBus</code> in <code>__init__</code>, so it can't be tested without hardware.`, o: SOLID_OPTS, a: 4,
+      e: `Dependency Inversion: depend on a <code>Bus</code> abstraction passed in from outside. Tests can then pass a Mock.` },
+    { q: `<code>ReadOnlyPresets</code> inherits from <code>Presets</code> but overrides <code>save()</code> to raise <code>NotImplementedError</code>.`, o: SOLID_OPTS, a: 2,
+      e: `Liskov Substitution: code expecting a <code>Presets</code> breaks when handed the subclass.` },
+    { q: `Your climate class must implement <code>play_audio()</code> and <code>navigate_to()</code> only because the shared interface requires them.`, o: SOLID_OPTS, a: 3,
+      e: `Interface Segregation: split the fat interface into small ones so each class implements only what it uses.` },
+  ],
+  4: [
+    { q: `Which file will pytest <em>not</em> collect with default settings?`,
+      o: ["<code>test_media.py</code>", "<code>media_test.py</code>", "<code>check_media.py</code>", "<code>test_bluetooth.py</code>"], a: 2,
+      e: `The defaults are <code>test_*.py</code> and <code>*_test.py</code>.` },
+    { q: `In the progress line, what's the difference between <code>F</code> and <code>E</code>?`,
+      o: ["F is a failure in the test body; E is an exception during fixture setup or teardown", "F is fatal; E is a warning", "They mean the same thing", "E means the test was expected to fail"], a: 0,
+      e: `E tells you the problem is in the setup code around the test, not the thing the test checks.` },
+    { q: `How do you run only the tests with "bluetooth" in their name?`,
+      o: ["<code>pytest -m bluetooth</code>", "<code>pytest -k bluetooth</code>", "<code>pytest --name bluetooth</code>", "<code>pytest bluetooth</code>"], a: 1,
+      e: `<code>-k</code> matches names and supports <code>and</code>/<code>or</code>/<code>not</code>. <code>-m</code> selects by marker.` },
+    { q: `<code>assert 0.1 + 0.2 == 0.3</code> fails. What's the right fix?`,
+      o: ["<code>assert round(0.1 + 0.2) == 0</code>", "<code>assert 0.1 + 0.2 == pytest.approx(0.3)</code>", "<code>assert str(0.1 + 0.2) == \"0.3\"</code>", "Use <code>is</code> instead of <code>==</code>"], a: 1,
+      e: `Floating-point results carry tiny errors. <code>pytest.approx</code> compares within a tolerance.` },
+  ],
+  5: [
+    { q: `What is a fixture's default scope?`, o: ["session", "module", "class", "function"], a: 3,
+      e: `A fresh instance per test, which keeps tests isolated from each other.` },
+    { q: `When does the code after <code>yield</code> in a fixture run?`,
+      o: ["Only if the test passes", "After the test finishes, pass or fail", "Before the test", "Only at the end of the session"], a: 1,
+      e: `Teardown always runs once the test has started. It's skipped only if the fixture itself failed before reaching <code>yield</code>.` },
+    { q: `A <code>session</code>-scoped fixture requests a <code>function</code>-scoped fixture. What happens?`,
+      o: ["It works normally", "The function fixture is promoted to session scope", "A ScopeMismatch error", "The session fixture runs once per test"], a: 2,
+      e: `A longer-lived fixture can't depend on something that's recreated for every test.` },
+    { q: `How do tests in several files share a fixture without importing it?`,
+      o: ["Define it in <code>conftest.py</code>", "Mark it <code>autouse=True</code>", "Put it in <code>__init__.py</code>", "Set <code>scope=\"package\"</code>"], a: 0,
+      e: `Pytest loads <code>conftest.py</code> automatically for its directory and all subdirectories.` },
+  ],
+  6: [
+    { q: `<code>m.side_effect = [1, 2]</code>. What do three calls to <code>m()</code> do?`,
+      o: ["Return [1, 2] each time", "Return 1, then 2, then raise StopIteration", "Return 1, 2, 1", "Raise immediately"], a: 1,
+      e: `An iterable side_effect yields one item per call and raises StopIteration when it's exhausted.` },
+    { q: `<code>ivi/bluetooth.py</code> does <code>from ivi.hw import scan_devices</code>. What should you patch?`,
+      o: ["<code>\"ivi.hw.scan_devices\"</code>", "<code>\"ivi.bluetooth.scan_devices\"</code>", "<code>\"scan_devices\"</code>", "Either of the first two"], a: 1,
+      e: `The bluetooth module holds its own reference to the function. Patch the name where it's looked up.` },
+    { q: `With two stacked <code>@patch</code> decorators, which mock is the test's first argument?`,
+      o: ["The top decorator's", "The bottom decorator's (closest to the function)", "Alphabetical order", "Whichever was created first at import"], a: 1,
+      e: `Decorators apply bottom-up, so the innermost patch supplies the first argument.` },
+    { q: `What does <code>MagicMock</code> add over <code>Mock</code>?`,
+      o: ["Automatic spec from the real class", "Preconfigured magic methods like <code>__len__</code>, <code>__iter__</code>, <code>__enter__</code>", "Async support only", "Call recording"], a: 1,
+      e: `Both record calls. MagicMock also lets you use <code>len()</code>, iteration and <code>with</code> on the mock.` },
+    { q: `<code>bus.send</code> was called with 20, then 21. What does <code>bus.send.assert_called_with(0x3A0, bytes([20]))</code> do?`,
+      o: ["Passes, because it was called with 20", "Fails, because it checks only the last call", "Fails, because it was called twice", "Raises TypeError"], a: 1,
+      e: `<code>assert_called_with</code> looks at the most recent call. Use <code>assert_any_call</code> for an earlier one.` },
+  ],
+  7: [
+    { q: `A test has two stacked parametrize decorators with 3 and 4 values. How many tests run?`, o: ["7", "4", "12", "3"], a: 2,
+      e: `Stacked parametrize produces every combination: 3 × 4.` },
+    { q: `How do you mark a single parametrized case as an expected failure?`,
+      o: ["<code>@pytest.mark.xfail</code> on the test", "<code>pytest.param(..., marks=pytest.mark.xfail)</code>", "<code>ids=[\"xfail\"]</code>", "Wrap the value in <code>pytest.raises</code>"], a: 1,
+      e: `Decorating the test would mark every case. <code>pytest.param</code> targets one.` },
+    { q: `What name does pytest give <code>test_valid_frequency</code> when <code>freq</code> is 99.9?`,
+      o: ["<code>test_valid_frequency_99.9</code>", "<code>test_valid_frequency[99.9]</code>", "<code>test_valid_frequency(1)</code>", "<code>test_valid_frequency#2</code>"], a: 1,
+      e: `The ID in brackets is also how you select one case: <code>pytest "tests/test_player.py::test_valid_frequency[99.9]"</code>.` },
+  ],
+  8: [
+    { q: `<code>set_volume(level: int)</code> is called with <code>"10"</code> and you run <code>python app.py</code>. What happens?`,
+      o: ["TypeError before running", "The code runs; hints aren't enforced at runtime", "Python converts \"10\" to 10", "SyntaxError"], a: 1,
+      e: `Only a checker like mypy catches it. Python ignores annotations when executing.` },
+    { q: `mypy prints <code>Argument 1 to "set_volume" has incompatible type "str"; expected "int"</code>. What's wrong?`,
+      o: ["The function returns the wrong type", "A str was passed where the parameter is annotated int", "set_volume isn't defined", "The annotation is missing"], a: 1,
+      e: `Arg-type errors point at the call site. The fix is to pass an int or change the annotation.` },
+    { q: `How should you annotate "returns a device name, or nothing if none is found"?`,
+      o: ["<code>-&gt; str</code>", "<code>-&gt; str | None</code>", "<code>-&gt; Any</code>", "<code>-&gt; NoReturn</code>"], a: 1,
+      e: `<code>str | None</code> (same as <code>Optional[str]</code>). <code>NoReturn</code> means the function never returns at all.` },
+    { q: `A function has no annotations at all. With default settings, what does mypy do with its body?`,
+      o: ["Checks it strictly", "Skips it", "Reports an error for the missing hints", "Infers types and checks it"], a: 1,
+      e: `Unannotated functions are treated as dynamically typed. Use <code>--check-untyped-defs</code> or <code>--strict</code>.` },
+    { q: `What's the return annotation for a function that returns nothing?`, o: ["<code>-&gt; void</code>", "<code>-&gt; None</code>", "<code>-&gt; NoReturn</code>", "Leave it off"], a: 1,
+      e: `Python functions without a return statement return None.` },
+  ],
+  9: [
+    { q: `Which command applies Ruff's safe auto-fixes?`, o: ["<code>ruff fix .</code>", "<code>ruff check --fix .</code>", "<code>ruff format --fix .</code>", "<code>ruff --auto .</code>"], a: 1,
+      e: `<code>ruff check --fix</code>. <code>ruff format</code> is a separate formatter with no <code>--fix</code> flag.` },
+    { q: `What does F401 mean?`, o: ["Line too long", "Module imported but unused", "Undefined name", "Missing docstring"], a: 1,
+      e: `F codes come from Pyflakes. F841 is an unused local variable; F821 is an undefined name.` },
+    { q: `What's the difference between <code>ruff check</code> and <code>ruff format</code>?`,
+      o: ["None; they're aliases", "check reports rule violations; format rewrites code layout", "check is faster", "format also type-checks"], a: 1,
+      e: `The linter finds problems like unused imports. The formatter handles spacing, quotes and wrapping, like Black.` },
+    { q: `Which name follows PEP 8 for a constant?`, o: ["<code>maxVolume</code>", "<code>max_volume</code>", "<code>MAX_VOLUME</code>", "<code>MaxVolume</code>"], a: 2,
+      e: `UPPER_CASE for constants, snake_case for functions and variables, PascalCase for classes.` },
+    { q: `What is Ruff's default line length?`, o: ["79", "80", "88", "120"], a: 2,
+      e: `88, matching Black. PEP 8 itself recommends 79. Change it with <code>line-length</code> in <code>[tool.ruff]</code>.` },
+  ],
+  10: [
+    { q: `By default, where does Behave look for step definitions?`, o: ["<code>tests/steps/</code>", "<code>features/steps/</code>", "Next to each feature file", "<code>steps.py</code> in the project root"], a: 1,
+      e: `<code>features/steps/*.py</code>, with hooks in <code>features/environment.py</code>.` },
+    { q: `A Scenario Outline has an Examples table with 3 data rows. How many times does it run?`, o: ["1", "3", "4", "Once per step"], a: 1,
+      e: `Once per data row; the header row only names the placeholders.` },
+    { q: `When do Background steps run?`, o: ["Once before the whole feature", "Before each scenario in that feature", "After each scenario", "Only before the first scenario"], a: 1,
+      e: `They're prepended to every scenario, after <code>before_scenario</code>.` },
+    { q: `An <code>And</code> step comes right after a <code>Then</code> step. Which step type is it matched as?`, o: ["Given", "When", "Then", "Any type"], a: 2,
+      e: `And and But inherit the type of the previous step. Use <code>@step</code> if the same text appears in different positions.` },
+    { q: `Which hook should close the simulated head unit after every scenario?`,
+      o: ["<code>after_all</code>", "<code>after_feature</code>", "<code>after_scenario</code>", "<code>after_step</code>"], a: 2,
+      e: `<code>after_scenario(context, scenario)</code> in <code>environment.py</code> runs even if a step failed.` },
+  ],
+};
+
+/* ---------- state ---------- */
+const KEY = "ivi-prep-v1";
+let state = { done: {}, ans: {} };
+try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s && s.done && s.ans) state = s; } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+/* ---------- syntax highlighting ---------- */
+const RULES = {
+  python: /(#[^\n]*)|([rbfu]{0,2}"""[\s\S]*?"""|[rbfu]{0,2}"(?:\\.|[^"\\\n])*"|[rbfu]{0,2}'(?:\\.|[^'\\\n])*')|(@[\w.]+)|\b(def|class|return|if|elif|else|for|in|import|from|as|with|raise|yield|not|and|or|is|None|True|False|pass|try|except|lambda|self|super|cls)\b|\b(0x[0-9A-Fa-f]+|\d+(?:\.\d+)?)\b/g,
+  gherkin: /(#[^\n]*)|("[^"\n]*")|(@[\w-]+)|(^[ \t]*(?:Feature|Background|Scenario Outline|Scenario|Examples|Given|When|Then|And|But)\b:?)|(<\w+>|\|)/gm,
+  toml: /(#[^\n]*)|("[^"\n]*")|(^[ \t]*\[[^\]\n]+\])|\b(true|false)\b|\b(\d+)\b/gm,
+  bash: /(#[^\n]*)|("[^"\n]*"|'[^'\n]*')|(@\w+)|((?<=\s)--?[A-Za-z][\w-]*)/gm,
+};
+const CLS = ["", "com", "str", "dec", "kw", "num"];
+function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function highlight(code, lang) {
+  const re = RULES[lang];
+  if (!re) return esc(code);
+  re.lastIndex = 0;
+  let out = "", last = 0, m;
+  while ((m = re.exec(code))) {
+    if (m[0] === "") { re.lastIndex++; continue; }
+    out += esc(code.slice(last, m.index));
+    let g = 1;
+    while (g < m.length && m[g] === undefined) g++;
+    out += `<span class="t-${CLS[g] || "kw"}">${esc(m[0])}</span>`;
+    last = re.lastIndex;
+  }
+  return out + esc(code.slice(last));
+}
+document.querySelectorAll("code[data-lang]").forEach(el => {
+  const raw = el.textContent.replace(/^\n+/, "").replace(/\s+$/, "");
+  el.innerHTML = highlight(raw, el.dataset.lang);
+});
+
+/* ---------- quizzes ---------- */
+const TOTAL = Object.values(QUIZ).reduce((n, qs) => n + qs.length, 0);
+document.getElementById("total").textContent = TOTAL;
+
+function renderQuiz(t) {
+  const box = document.querySelector(`.quiz[data-quiz="${t}"]`);
+  const qs = QUIZ[t];
+  const right = qs.filter((q, i) => state.ans[`${t}-${i}`] === q.a).length;
+  const answered = qs.filter((q, i) => state.ans[`${t}-${i}`] !== undefined).length;
+  let html = `<div class="quiz-head"><h3>Check yourself</h3><span class="quiz-score">${right}/${qs.length} correct${answered < qs.length ? ` · ${qs.length - answered} left` : ""}</span></div>`;
+  qs.forEach((q, i) => {
+    const key = `${t}-${i}`;
+    const pick = state.ans[key];
+    const done = pick !== undefined;
+    html += `<div class="q"><p class="q-text"><span class="qn">Q${i + 1}</span>${q.q}</p><div class="opts">`;
+    q.o.forEach((o, j) => {
+      let c = "opt";
+      if (done) {
+        if (j === q.a) c += " correct";
+        else if (j === pick) c += " wrong";
+        else c += " dim";
+      }
+      html += `<button type="button" class="${c}" data-key="${key}" data-j="${j}" ${done ? "disabled" : ""}>${o}</button>`;
+    });
+    html += `</div>`;
+    if (done) {
+      const ok = pick === q.a;
+      html += `<p class="explain"><span class="verdict ${ok ? "good" : "bad"}">${ok ? "Correct." : "Not quite."}</span><span>${q.e}</span>${ok ? "" : `<button type="button" class="retry" data-retry="${key}">Try again</button>`}</p>`;
+    }
+    html += `</div>`;
+  });
+  box.innerHTML = html;
+}
+
+document.addEventListener("click", e => {
+  const opt = e.target.closest(".opt");
+  if (opt && !opt.disabled) {
+    state.ans[opt.dataset.key] = Number(opt.dataset.j);
+    save();
+    const t = opt.dataset.key.split("-")[0];
+    renderQuiz(t); refresh();
+    return;
+  }
+  const r = e.target.closest(".retry");
+  if (r) {
+    delete state.ans[r.dataset.retry];
+    save();
+    const t = r.dataset.retry.split("-")[0];
+    renderQuiz(t); refresh();
+  }
+});
+
+document.querySelectorAll("[data-done]").forEach(cb => {
+  cb.checked = !!state.done[cb.dataset.done];
+  cb.addEventListener("change", () => {
+    if (cb.checked) state.done[cb.dataset.done] = true; else delete state.done[cb.dataset.done];
+    save(); refresh();
+  });
+});
+
+/* ---------- nav + progress ---------- */
+const toc = document.getElementById("toc");
+toc.innerHTML = TOPICS.map((name, i) => `<li><a href="#t${i + 1}" data-t="${i + 1}"><span class="n">${String(i + 1).padStart(2, "0")}</span><span>${esc(name)}</span><span class="st"></span></a></li>`).join("")
+  + `<li><a href="#cheat"><span class="n">··</span><span>Cheat sheet</span><span class="st"></span></a></li>`;
+const meter = document.getElementById("meter");
+meter.innerHTML = TOPICS.map(() => "<span></span>").join("");
+
+function refresh() {
+  let correct = 0, answered = 0, reviewed = 0;
+  TOPICS.forEach((_, i) => {
+    const t = i + 1, qs = QUIZ[t];
+    let r = 0;
+    qs.forEach((q, k) => { const p = state.ans[`${t}-${k}`]; if (p !== undefined) { answered++; if (p === q.a) { r++; correct++; } } });
+    const isDone = !!state.done[t];
+    if (isDone) reviewed++;
+    const a = toc.querySelector(`a[data-t="${t}"]`);
+    a.classList.toggle("done", isDone);
+    a.querySelector(".st").textContent = isDone ? `✓ ${r}/${qs.length}` : `${r}/${qs.length}`;
+    meter.children[i].classList.toggle("on", isDone);
+  });
+  document.getElementById("reviewed").textContent = reviewed;
+  document.getElementById("correct").textContent = correct;
+  document.getElementById("answered").textContent = answered;
+}
+
+const resetBtn = document.getElementById("reset");
+let resetArmed = false;
+resetBtn.addEventListener("click", () => {
+  if (!resetArmed) {
+    resetArmed = true; resetBtn.textContent = "Click again to clear everything"; resetBtn.classList.add("confirm");
+    setTimeout(() => { resetArmed = false; resetBtn.textContent = "Reset progress"; resetBtn.classList.remove("confirm"); }, 4000);
+    return;
+  }
+  state = { done: {}, ans: {} }; save();
+  document.querySelectorAll("[data-done]").forEach(cb => cb.checked = false);
+  Object.keys(QUIZ).forEach(renderQuiz); refresh();
+  resetArmed = false; resetBtn.textContent = "Progress cleared"; resetBtn.classList.remove("confirm");
+  setTimeout(() => { resetBtn.textContent = "Reset progress"; }, 2000);
+});
+
+Object.keys(QUIZ).forEach(renderQuiz);
+refresh();
+
+if ("IntersectionObserver" in window) {
+  const links = [...toc.querySelectorAll("a")];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        const id = en.target.id;
+        links.forEach(l => l.classList.toggle("active", l.getAttribute("href") === `#${id}`));
+      }
+    });
+  }, { rootMargin: "-35% 0px -60% 0px" });
+  document.querySelectorAll(".topic").forEach(s => io.observe(s));
+}
+</script>
+
+</body></html>
